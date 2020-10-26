@@ -16,11 +16,15 @@ class _MyAppState extends State<MyApp> {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       home: Scaffold(
-        appBar: AppBar(
-          title: Text("Calculator"),
-        ),
-        body: Home(),
-      ),
+          appBar: AppBar(
+            elevation: 0,
+            title: Text(
+              "Calculator",
+              style: TextStyle(fontSize: 25),
+              textAlign: TextAlign.center,
+            ),
+          ),
+          body: Home()),
     );
   }
 }

@@ -1,4 +1,6 @@
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:math_expressions/math_expressions.dart';
 
 class Home extends StatefulWidget {
   @override
@@ -6,27 +8,76 @@ class Home extends StatefulWidget {
 }
 
 class _HomeState extends State<Home> {
-  Widget button(String text) {
+  String str = "";
+  void pressed(String text) {}
+  Widget button(String text, int ch) {
+    var color;
+    if (ch == 1) {
+      color = Colors.blue;
+    } else if (ch == 2) {
+      color = Colors.green;
+    } else {
+      color = Colors.orange;
+    }
     double _height = MediaQuery.of(context).size.height;
     double _width = MediaQuery.of(context).size.width;
     return Padding(
       padding: const EdgeInsets.all(1.0),
       child: Container(
-        color: Colors.blue[400],
         width: _width * 0.2449,
-        height: _height * 0.15,
+        height: _height * 0.12,
         child: RaisedButton(
+          color: color,
           elevation: 20,
-          onPressed: null,
           child: Text(
             text,
             style: TextStyle(
               color: Colors.black,
-              decorationThickness: 6,
+              decorationThickness: 2,
               fontSize: 35,
               fontWeight: FontWeight.bold,
             ),
           ),
+          onPressed: () {
+            if (ch == 1) {
+              str += text;
+              setState(() {
+                str;
+              });
+            } else if (ch == 2 && text == '=') {
+              str = str.replaceAll('x', '*');
+              print(str);
+
+              try {
+                Parser p = Parser();
+                Expression exp = p.parse(str);
+
+                ContextModel cm = ContextModel();
+                str = '${exp.evaluate(EvaluationType.REAL, cm)}';
+              } catch (e) {
+                str = "Error";
+              }
+
+              setState(() {
+                str;
+              });
+            } else if (ch == 2) {
+              str += text;
+              setState(() {
+                str;
+              });
+            } else if (text == "C") {
+              str = "";
+              setState(() {
+                str;
+              });
+            } else {
+              str = str.substring(0, str.length - 1);
+              setState(() {
+                str;
+              });
+            }
+          },
         ),
       ),
     );
@@ -40,61 +91,73 @@ class _HomeState extends State<Home> {
       children: [
         Expanded(
           flex: 1,
-          child: Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: Container(
-              alignment: Alignment.topRight,
+          child: Container(
+            child: Padding(
+              padding: const EdgeInsets.fromLTRB(10, 25, 10, 25),
               child: Text(
-                "Field",
+                str,
+                overflow: TextOverflow.ellipsis,
+                maxLines: 3,
+                textAlign: TextAlign.right,
                 style: TextStyle(
-                  fontSize: 20,
-                  fontStyle: FontStyle.normal,
+                  fontSize: 45,
+                  fontWeight: FontWeight.normal,
                 ),
               ),
             ),
           ),
         ),
-        Divider(),
+
         //keyboard
         Column(
           children: [
             Container(
               child: Row(
                 children: [
-                  button('x'),
-                  button('/'),
-                  button('⌫'),
-                  button("C"),
+                  button('x', 2),
+                  button('/', 2),
+                  button('⌫', 3),
+                  button("C", 3),
                 ],
               ),
             ),
             Container(
               child: Row(
                 children: [
-                  button('1'),
-                  button('2'),
-                  button('3'),
-                  button("+"),
+                  button('1', 1),
+                  button('2', 1),
+                  button('3', 1),
+                  button("+", 2),
                 ],
               ),
             ),
             Container(
               child: Row(
                 children: [
-                  button('4'),
-                  button('5'),
-                  button('6'),
-                  button("-"),
+                  button('4', 1),
+                  button('5', 1),
+                  button('6', 1),
+                  button("-", 2),
                 ],
               ),
             ),
             Container(
               child: Row(
                 children: [
-                  button('7'),
-                  button('8'),
-                  button('9'),
-                  button("="),
+                  button('7', 1),
+                  button('8', 1),
+                  button('9', 1),
+                  button("=", 2),
+                ],
+              ),
+            ),
+            Container(
+              child: Row(
+                children: [
+                  button('.', 1),
+                  button('0', 1),
+                  button('00', 1),
+                  button("^", 2),
                 ],
               ),
             ),
