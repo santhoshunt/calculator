@@ -55,7 +55,7 @@ class _HomeState extends State<Home> {
                 ContextModel cm = ContextModel();
                 str = '${exp.evaluate(EvaluationType.REAL, cm)}';
               } catch (e) {
-                str = "Error";
+                str = "Error clear and try again!";
               }
 
               setState(() {
